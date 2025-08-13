@@ -5,31 +5,29 @@ namespace App\Http\Controllers\API\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    public function login (Request $request)
+    public function login(Request $request)
     {
-        $request->validate([
-            'nik' => 'required|integer',
-            'nama_lengkap' => 'required|string',
+        $credentials = $request->validate([
+            'nik' => ['required', 'string'],
+            'nama_lengkap' => ['required', 'string'],
         ]);
 
-        // Logic for handling login would go here
-        $user = User::where('nik', '=', $request->nik)
-            ->where('nama_lengkap', '=',$request->nama_lengkap)
-            ->first();
+        $user = User::where('nik', $credentials['nik'])
+                    ->where('nama_lengkap', $credentials['nama_lengkap'])
+                    ->first();
 
-        if (!$user) {
-            return response()->json(['message' => 'User not found'], 404);
+        if ($user) {
+            Auth::login($user);
+            $request->session()->regenerate();
+            return redirect()->intended('/');
         }
 
-        $token = $user->createToken('auth_token')->plainTextToken;
-        // Assuming successful login, you might want to return a token or user data
-        return response()->json([
-            'message' => 'Login successful',
-            'user' => $user,
-            'token' => $token,
+        return back()->withErrors([
+            'nik' => 'NIK atau nama lengkap salah.',
         ]);
     }
 

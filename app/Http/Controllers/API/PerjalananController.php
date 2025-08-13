@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Auth;
 
 class PerjalananController extends Controller
 {
+    public function index ()
+    {
+        return view('Home');
+    }
     public function send( Request $request )
     {
         $request->validate([
