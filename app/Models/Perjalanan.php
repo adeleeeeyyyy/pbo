@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Perjalanan extends Model
 {
     protected $fillable = [
+        'nama',
         'tanggal',
         'jam',
         'lokasi',
@@ -15,6 +16,5 @@ class Perjalanan extends Model
 
     protected $casts = [
         'tanggal' => 'datetime',
-        'jam' => 'time',
     ];
 }

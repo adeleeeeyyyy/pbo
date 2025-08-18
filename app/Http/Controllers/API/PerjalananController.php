@@ -5,34 +5,40 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Perjalanan;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 
 class PerjalananController extends Controller
 {
     public function index ()
     {
-        return view('Home');
+        $travelData = Perjalanan::orderBy('tanggal', 'desc')
+                           ->orderBy('jam', 'desc')
+                           ->get();
+        return view('Home', compact('travelData'));
     }
-    public function send( Request $request )
+    public function store(Request $request): RedirectResponse
     {
-        $request->validate([
+        $validated = $request->validate([
             'tanggal' => 'required|date',
-            'jam' => 'required|date_format:H:i:s',
+            'jam' => 'required',
             'lokasi' => 'required|string|max:255',
             'suhu_tubuh' => 'required|numeric|min:30|max:45',
-        ]);
-        $user = Auth::user();
-        $perjalanan = Perjalanan::create([
-            'nama' => $user->nama_lengkap,
-            'tanggal' => $request->tanggal,
-            'jam' => $request->jam,
-            'lokasi' => $request->lokasi,
-            'suhu_tubuh' => $request->suhu_tubuh,
+        ], [
+            'tanggal.required' => 'Tanggal harus diisi',
+            'tanggal.date' => 'Format tanggal tidak valid',
+            'jam.required' => 'Waktu harus diisi',
+            'lokasi.required' => 'Lokasi harus diisi',
+            'lokasi.max' => 'Lokasi maksimal 255 karakter',
+            'suhu_tubuh.required' => 'Suhu tubuh harus diisi',
+            'suhu_tubuh.numeric' => 'Suhu tubuh harus berupa angka',
+            'suhu_tubuh.min' => 'Suhu tubuh minimal 30°C',
+            'suhu_tubuh.max' => 'Suhu tubuh maksimal 45°C',
         ]);
 
-        return response()->json([
-            'message' => 'Perjalanan sent successfully',
-            'perjalanan' => $perjalanan,
-        ]);
+        Perjalanan::create($validated);
+
+        return redirect()->route('home')
+                        ->with('success', 'Data perjalanan berhasil disimpan!');
     }
 }
