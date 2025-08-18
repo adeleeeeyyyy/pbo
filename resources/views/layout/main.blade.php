@@ -14,11 +14,19 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="font-sans antialiased">
+<body class="font-sans antialiased w-screen h-screen relative">
     <div class="min-h-screen bg-gray-100">
         @yield('content')
     </div>
 
+
+    <footer class="fixed bottom-0 w-full">
+        <div class="bg-gray-800 text-white py-4">
+            <div class="container mx-auto text-center">
+                <p>&copy; 2023 FAVECIA. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
     <!-- Success message auto-hide script -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {

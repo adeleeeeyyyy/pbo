@@ -15,6 +15,6 @@ class Perjalanan extends Model
     ];
 
     protected $casts = [
-        'tanggal' => 'datetime',
+        'tanggal' => 'date:Y-m-d',
     ];
 }

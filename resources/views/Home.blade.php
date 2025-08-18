@@ -54,12 +54,12 @@
                                     <td class="py-3 px-4">{{ $travel->lokasi }}</td>
                                     <td class="py-3 px-4">
                                         <span class="px-2 py-1 rounded-full text-xs font-medium
-                                            @if($travel->temperature > 37.5)
+                                            @if($travel->suhu_tubuh > 37.5)
                                                 bg-red-100 text-red-800
                                             @else
                                                 bg-green-100 text-green-800
                                             @endif">
-                                            {{ $travel->temperature }}°C
+                                            {{ $travel->suhu_tubuh }}°C
                                         </span>
                                     </td>
                                 </tr>
